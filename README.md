@@ -1,6 +1,14 @@
 # docker4wordpress
 docker compose for wordpress with nginx
 
+images:
+
+- wordpress
+- wordpress-cli
+- nginx
+- mysql
+- phpmyadmin
+
 # docker环境部署
 
 ## linux安装
@@ -179,4 +187,31 @@ firewall-cmd --reload
 - 查看Portainer的DashBoard信息：http://10.2.33.155:9000
 
 # 运行安装wordpress
- 
+
+## 配置文件
+
+- 默认配置为.env_example，部署时改为.env并设置自己的值
+
+- nginx的SSL证书默认根据设置的servername，用mkcert生成，如使用自己提供的，放在certs目录：nginx.crt nginx.key即可
+
+## 部署
+
+将整个项目压缩打包上传到服务器，执行下面脚本：
+
+```shell
+#!/bin/bash
+set -o errexit
+rm -rf docker4wordpress
+unzip docker4wordpress.zip
+cd docker4wordpress
+cp -n .env_example .env
+chmod +x *.sh
+find -type f | xargs dos2unix -o
+./start.sh
+cd ..
+```
+
+也可自己一步一步手动执行命令部署：
+- start.sh 启动部署
+- stop-remove.sh 停止并删除数据和日志
+- dump.sh 导出数据库数据为sql文件
